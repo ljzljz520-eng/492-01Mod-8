@@ -28,6 +28,13 @@
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="username" label="账号" />
         <el-table-column prop="nickname" label="昵称" />
+        <el-table-column prop="role" label="角色" width="120">
+          <template #default="{ row }">
+            <el-tag :type="getRoleType(row.role)">
+              {{ getRoleText(row.role) }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column label="操作" width="250" fixed="right">
           <template #default="{ row }">
@@ -67,6 +74,13 @@
         </el-form-item>
         <el-form-item label="昵称" prop="nickname">
           <el-input v-model="form.nickname" placeholder="请输入昵称" />
+        </el-form-item>
+        <el-form-item label="角色" prop="role">
+          <el-select v-model="form.role" placeholder="请选择角色" class="w-full">
+            <el-option label="管理员" value="admin" />
+            <el-option label="工人" value="worker" />
+            <el-option label="仓管" value="warehouse" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -119,7 +133,8 @@ const pagination = reactive({
 const form = reactive({
   username: '',
   password: '',
-  nickname: ''
+  nickname: '',
+  role: 'worker'
 })
 
 const resetPasswordForm = reactive({
@@ -181,7 +196,8 @@ const handleAdd = () => {
   Object.assign(form, {
     username: '',
     password: '',
-    nickname: ''
+    nickname: '',
+    role: 'worker'
   })
   dialogVisible.value = true
 }
@@ -192,10 +208,19 @@ const handleEdit = (row) => {
   Object.assign(form, {
     username: row.username,
     password: '',
-    nickname: row.nickname || ''
+    nickname: row.nickname || '',
+    role: row.role || 'worker'
   })
   dialogVisible.value = true
 }
+
+const getRoleType = (role) => ({
+  admin: 'danger', worker: 'primary', warehouse: 'success'
+}[role] || 'info')
+
+const getRoleText = (role) => ({
+  admin: '管理员', worker: '工人', warehouse: '仓管'
+}[role] || role || '工人')
 
 const handleDialogClose = () => {
   if (formRef.value) {

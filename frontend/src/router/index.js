@@ -22,7 +22,7 @@ const routes = [
     children: [
       {
         path: '',
-        redirect: '/pc/file'
+        redirect: '/pc/schedule'
       },
       {
         path: 'file',
@@ -31,6 +31,18 @@ const routes = [
       {
         path: 'work',
         component: () => import('@/views/pc/Work.vue')
+      },
+      {
+        path: 'schedule',
+        component: () => import('@/views/pc/Schedule.vue')
+      },
+      {
+        path: 'supply-record',
+        component: () => import('@/views/pc/SupplyRecord.vue')
+      },
+      {
+        path: 'work-hour',
+        component: () => import('@/views/pc/WorkHour.vue')
       },
       {
         path: 'user',
@@ -44,7 +56,7 @@ const routes = [
     children: [
       {
         path: '',
-        redirect: '/h5/file'
+        redirect: '/h5/schedule'
       },
       {
         path: 'file',
@@ -53,6 +65,14 @@ const routes = [
       {
         path: 'work',
         component: () => import('@/views/h5/Work.vue')
+      },
+      {
+        path: 'schedule',
+        component: () => import('@/views/h5/Schedule.vue')
+      },
+      {
+        path: 'supply-record',
+        component: () => import('@/views/h5/SupplyRecord.vue')
       },
       {
         path: 'user',

@@ -50,18 +50,43 @@ public class UserController {
         }
     }
 
+    @GetMapping("/list")
+    @ApiOperation("查询用户列表")
+    public Result<java.util.List<User>> list(
+            @RequestParam(required = false) String role) {
+        com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<User> wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
+        if (org.springframework.util.StringUtils.hasText(role)) {
+            wrapper.eq(User::getRole, role);
+        }
+        java.util.List<User> list = userService.list(wrapper);
+        list.forEach(user -> user.setPassword(null));
+        return Result.success(list);
+    }
+
     @GetMapping("/page")
     @ApiOperation("分页查询用户")
     public Result<PageResult<User>> page(
             @RequestParam(defaultValue = "1") Long current,
             @RequestParam(defaultValue = "10") Long size,
             @RequestParam(required = false) String username,
-            @RequestParam(required = false) String nickname) {
-        Page<User> page = userService.pageQuery(current, size, username, nickname);
-        
-        // 不返回密码
+            @RequestParam(required = false) String nickname,
+            @RequestParam(required = false) String role) {
+        Page<User> page = new Page<>(current, size);
+        com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<User> wrapper = new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<>();
+        if (StringUtils.hasText(username)) {
+            wrapper.like(User::getUsername, username);
+        }
+        if (StringUtils.hasText(nickname)) {
+            wrapper.like(User::getNickname, nickname);
+        }
+        if (StringUtils.hasText(role)) {
+            wrapper.eq(User::getRole, role);
+        }
+        wrapper.orderByDesc(User::getCreateTime);
+        page = userService.page(page, wrapper);
+
         page.getRecords().forEach(user -> user.setPassword(null));
-        
+
         PageResult<User> pageResult = new PageResult<>(
                 page.getTotal(),
                 page.getRecords(),

@@ -25,13 +25,25 @@
             router
             class="border-r-0"
           >
-            <el-menu-item index="/pc/file">
-              <el-icon><Document /></el-icon>
-              <span>文件管理</span>
+            <el-menu-item index="/pc/schedule">
+              <el-icon><Calendar /></el-icon>
+              <span>排班管理</span>
+            </el-menu-item>
+            <el-menu-item index="/pc/supply-record">
+              <el-icon><Present /></el-icon>
+              <span>物资发放</span>
+            </el-menu-item>
+            <el-menu-item index="/pc/work-hour">
+              <el-icon><Money /></el-icon>
+              <span>工资结算</span>
             </el-menu-item>
             <el-menu-item index="/pc/work">
               <el-icon><Briefcase /></el-icon>
               <span>工作管理</span>
+            </el-menu-item>
+            <el-menu-item index="/pc/file">
+              <el-icon><Document /></el-icon>
+              <span>文件管理</span>
             </el-menu-item>
             <el-menu-item index="/pc/user">
               <el-icon><User /></el-icon>
@@ -50,7 +62,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Document, Briefcase, RefreshRight, User } from '@element-plus/icons-vue'
+import { Document, Briefcase, RefreshRight, User, Calendar, Present, Money } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()

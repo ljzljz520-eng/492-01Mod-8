@@ -28,4 +28,9 @@ public class User extends BaseEntity {
      * 昵称
      */
     private String nickname;
+
+    /**
+     * 用户角色（admin-管理员，worker-工人，warehouse-仓管）
+     */
+    private String role;
 }
