@@ -7,8 +7,12 @@
       class="bg-white shadow-sm"
     >
       <template #right>
+        <span class="text-sm text-gray-600 mr-2" v-if="userStore.isLoggedIn">{{ userStore.userName }}</span>
         <van-button size="small" type="primary" @click="switchToPC">
-          切换到PC端
+          PC端
+        </van-button>
+        <van-button size="small" type="danger" plain @click="handleLogout" class="ml-2" v-if="userStore.isLoggedIn">
+          退出
         </van-button>
       </template>
     </van-nav-bar>
@@ -27,9 +31,12 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/store/user'
+import { showDialog } from 'vant'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const activeTab = ref(0)
 
 const navTitle = computed(() => {
@@ -44,10 +51,25 @@ const navTitle = computed(() => {
 })
 
 const switchToPC = () => {
-  // 获取当前路径，将/h5替换为/pc
   const currentPath = route.path
   const pcPath = currentPath.replace('/h5', '/pc')
   router.push(pcPath)
+}
+
+const handleLogout = async () => {
+  try {
+    await showDialog({
+      title: '提示',
+      message: '确定要退出登录吗？',
+      showCancelButton: true,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消'
+    })
+    userStore.logout()
+    router.push('/h5/login')
+  } catch (e) {
+    // 取消
+  }
 }
 </script>
 

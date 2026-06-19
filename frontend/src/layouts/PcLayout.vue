@@ -14,6 +14,19 @@
               <el-icon><RefreshRight /></el-icon>
               切换到H5端
             </el-button>
+            <span class="text-sm text-gray-600" v-if="userStore.isLoggedIn">
+              <el-icon><User /></el-icon>
+              {{ userStore.userName }}
+            </span>
+            <el-button 
+              type="danger" 
+              size="small" 
+              plain
+              @click="handleLogout"
+              v-if="userStore.isLoggedIn"
+            >
+              退出登录
+            </el-button>
             <div class="text-sm text-gray-600">PC端</div>
           </div>
         </div>
@@ -63,16 +76,28 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Document, Briefcase, RefreshRight, User, Calendar, Present, Money } from '@element-plus/icons-vue'
+import { useUserStore } from '@/store/user'
+import { ElMessageBox } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const activeMenu = computed(() => route.path)
 
 const switchToH5 = () => {
-  // 获取当前路径，将/pc替换为/h5
   const currentPath = route.path
   const h5Path = currentPath.replace('/pc', '/h5')
   router.push(h5Path)
+}
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '提示', { type: 'warning' })
+    userStore.logout()
+    router.push('/pc/login')
+  } catch (e) {
+    // 取消
+  }
 }
 </script>
 

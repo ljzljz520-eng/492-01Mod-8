@@ -52,8 +52,10 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { userApi } from '@/api/user'
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 const loading = ref(false)
 
 const loginForm = reactive({
@@ -67,10 +69,8 @@ const handleLogin = async () => {
     const res = await userApi.login(loginForm)
     if (res.code === 200) {
       showToast({ type: 'success', message: '登录成功' })
-      // 保存用户信息到localStorage
-      localStorage.setItem('user', JSON.stringify(res.data))
-      // 跳转到文件管理页面
-      router.push('/h5/file')
+      userStore.setUser(res.data)
+      router.push('/h5/schedule')
     }
   } catch (error) {
     console.error(error)

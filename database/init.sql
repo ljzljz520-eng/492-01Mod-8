@@ -54,6 +54,7 @@ CREATE TABLE `user` (
   `username` varchar(50) NOT NULL COMMENT '用户名（账号）',
   `password` varchar(100) NOT NULL COMMENT '密码（不加密）',
   `nickname` varchar(50) DEFAULT NULL COMMENT '昵称',
+  `role` varchar(20) DEFAULT 'worker' COMMENT '用户角色（admin-管理员，worker-工人，warehouse-仓管）',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除标识（0-未删除，1-已删除）',
@@ -62,8 +63,8 @@ CREATE TABLE `user` (
   KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
--- 插入默认admin账号
-INSERT INTO `user` (`username`, `password`, `nickname`) VALUES ('admin', '123456', '管理员');
+-- 插入默认账号
+INSERT INTO `user` (`username`, `password`, `nickname`, `role`) VALUES ('admin', '123456', '管理员', 'admin');
 INSERT INTO `user` (`username`, `password`, `nickname`, `role`) VALUES ('worker', '123456', '张工人', 'worker');
 INSERT INTO `user` (`username`, `password`, `nickname`, `role`) VALUES ('warehouse', '123456', '李仓管', 'warehouse');
 
@@ -215,9 +216,5 @@ INSERT INTO `heat_config` (`config_key`, `config_value`, `config_name`, `descrip
 ('rest_frequency_37_40', '4', '37-40℃休息频次', '37-40℃之间的休息频次（次/天）'),
 ('rest_frequency_above_40', '6', '40℃以上休息频次', '40℃以上的休息频次（次/天）'),
 ('work_stop_temp', '40', '停工温度', '达到此温度停止室外作业（摄氏度）');
-
--- 修改用户表，增加角色字段
-ALTER TABLE `user` ADD COLUMN `role` varchar(20) DEFAULT 'worker' COMMENT '用户角色（admin-管理员，worker-工人，warehouse-仓管）' AFTER `nickname`;
-UPDATE `user` SET `role` = 'admin' WHERE `username` = 'admin';
 
 SET FOREIGN_KEY_CHECKS = 1;

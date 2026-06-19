@@ -55,8 +55,10 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { userApi } from '@/api/user'
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 const loginFormRef = ref(null)
 const loading = ref(false)
 
@@ -84,10 +86,8 @@ const handleLogin = async () => {
         const res = await userApi.login(loginForm)
         if (res.code === 200) {
           ElMessage.success('登录成功')
-          // 保存用户信息到localStorage
-          localStorage.setItem('user', JSON.stringify(res.data))
-          // 跳转到文件管理页面
-          router.push('/pc/file')
+          userStore.setUser(res.data)
+          router.push('/pc/schedule')
         }
       } catch (error) {
         console.error(error)
